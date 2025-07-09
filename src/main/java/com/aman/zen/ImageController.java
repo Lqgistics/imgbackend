@@ -23,14 +23,16 @@ public class ImageController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<Image> uploadImage(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
         try {
             Image uploadedImage = imageService.uploadImage(file);
             return ResponseEntity.status(HttpStatus.CREATED).body(uploadedImage);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+         } catch (IllegalStateException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    } catch (IOException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
+}
 
     @GetMapping
     public ResponseEntity<List<Image>> getAllImages() {
@@ -42,6 +44,21 @@ public class ImageController {
         Optional<Image> image = Optional.ofNullable(imageService.getImageById(id));
         return image.map(ResponseEntity::ok)
                     .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteImage(@PathVariable Long id) {
+        try {
+            boolean deleted = imageService.deleteImage(id);
+            if (deleted) {
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     

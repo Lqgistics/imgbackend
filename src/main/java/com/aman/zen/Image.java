@@ -14,15 +14,17 @@ public class Image {
     private String fileName;
     private String fileType;
     private String filePath;
+    private Long fileSize;
     private LocalDateTime uploadDate;
 
     public Image() {
     }
 
-    public Image(String fileName, String fileType, String filePath, LocalDateTime uploadDate) {
+    public Image(String fileName, String fileType, String filePath, Long fileSize, LocalDateTime uploadDate) {
         this.fileName = fileName;
         this.fileType = fileType;
         this.filePath = filePath;
+        this.fileSize = fileSize;
         this.uploadDate = uploadDate;
     }
 
@@ -52,6 +54,14 @@ public class Image {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public Long getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(Long fileSize) {
+        this.fileSize = fileSize;
     }
 
     public LocalDateTime getUploadDate() {

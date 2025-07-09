@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,14 +32,28 @@ public class ImageService {
 
         Path filePath = this.uploadDIR.resolve(file.getOriginalFilename());
 
+        if(file.isEmpty()) {
+            throw new IOException("File is empty");
+        }
+
+        Optional<Image> existingImage = imageRepository.findByFileName(file.getOriginalFilename());
+
+        if(existingImage.isPresent()) {
+            throw new IllegalStateException("A file with the name '" + file.getOriginalFilename() + "' already exists.");        
+        }
+
+
         try (InputStream inputStream = file.getInputStream()) {
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new IOException("Failed to save the file: " + e.getMessage(), e);
         }
 
         Image metadata = new Image();
         metadata.setFileName(file.getOriginalFilename());
         metadata.setFileType(file.getContentType());
         metadata.setFilePath(filePath.toString());
+        metadata.setFileSize((file.getSize()) / 1000);
         metadata.setUploadDate(LocalDateTime.now());
 
         return imageRepository.save(metadata);
@@ -50,6 +65,20 @@ public class ImageService {
 
     public Image getImageById(Long id) {
         return imageRepository.findById(id).orElse(null);
+    }
+
+    public boolean deleteImage(long id) throws IOException {
+        Optional<Image> imageMetadata = imageRepository.findById(id);
+        if(imageMetadata.isPresent()) {
+            Image metadata = imageMetadata.get();
+
+            Path filePath = Paths.get(metadata.getFilePath());
+            Files.delete(filePath);
+            imageRepository.deleteById(id);
+            return true;
+
+        }
+        return false;
     }
 
 
