@@ -40,6 +40,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll() // Allow auth endpoints
+                .requestMatchers("/api/health").permitAll()
                 .anyRequest().authenticated() // Secure all other endpoints
             );
 

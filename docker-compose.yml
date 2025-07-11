@@ -3,8 +3,8 @@ services:
     container_name: postgres-spring-boot
     image: postgres:latest
     environment:
-      POSTGRES_USER: aman
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       PGDATA: /data/postgres
     volumes:
       - db:/data/postgres
