@@ -16,8 +16,6 @@ import com.aman.zen.AuthDTOs.JwtResponse;
 import com.aman.zen.AuthDTOs.LoginDto;
 import com.aman.zen.AuthDTOs.SignUpDto;
 
-
-
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -44,19 +42,21 @@ public class AuthController {
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
-     @PostMapping("/signup")
+    @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignUpDto signUpDto) {
+        // Check if email already exists
         if (userRepository.findByEmail(signUpDto.getEmail()).isPresent()) {
-            return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Email is already taken!", HttpStatus.BAD_REQUEST);
         }
 
+        // Create new user
         User user = new User();
         user.setEmail(signUpDto.getEmail());
+        user.setUsername(signUpDto.getUsername());
         user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
 
         userRepository.save(user);
 
         return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
     }
-    
 }
