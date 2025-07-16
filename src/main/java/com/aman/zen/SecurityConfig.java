@@ -61,6 +61,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll() // Allow auth endpoints
                 .requestMatchers("/api/health").permitAll()
+                .requestMatchers("/api/images/view/**").permitAll() // Allow public image viewing
                 .anyRequest().authenticated() // Secure all other endpoints
             );
 

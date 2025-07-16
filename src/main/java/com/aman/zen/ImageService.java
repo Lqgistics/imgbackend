@@ -56,6 +56,9 @@ public class ImageService {
         metadata.setFileSize((file.getSize()) / 1000);
         metadata.setUploadDate(LocalDateTime.now());
 
+        String viewURL = "api/images/view/" + file.getOriginalFilename();
+        metadata.setViewURL(viewURL);
+
         return imageRepository.save(metadata);
     }
 

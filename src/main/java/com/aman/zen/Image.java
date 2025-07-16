@@ -16,16 +16,18 @@ public class Image {
     private String filePath;
     private Long fileSize;
     private LocalDateTime uploadDate;
+    private String viewURL;
 
     public Image() {
     }
 
-    public Image(String fileName, String fileType, String filePath, Long fileSize, LocalDateTime uploadDate) {
+    public Image(String fileName, String fileType, String filePath, Long fileSize, LocalDateTime uploadDate, String viewURL) {
         this.fileName = fileName;
         this.fileType = fileType;
         this.filePath = filePath;
         this.fileSize = fileSize;
         this.uploadDate = uploadDate;
+        this.viewURL = viewURL;
     }
 
     public Long getId() {
@@ -70,6 +72,14 @@ public class Image {
 
     public void setUploadDate(LocalDateTime uploadDate) {
         this.uploadDate = uploadDate;
+    }
+
+    public String getViewURL() {
+        return viewURL;
+    }
+
+    public void setViewURL(String viewURL) {
+        this.viewURL = viewURL;
     }
 
     
