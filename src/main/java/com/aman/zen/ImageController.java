@@ -1,7 +1,5 @@
 package com.aman.zen;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +9,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
-
+import java.security.Principal;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -27,15 +25,15 @@ public class ImageController {
     
     private final ImageService imageService;
 
-    @Autowired
     public ImageController(ImageService imageService) {
         this.imageService = imageService;
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file, Principal principal) {
         try {
-            Image uploadedImage = imageService.uploadImage(file);
+            String userEmail = principal.getName();
+            Image uploadedImage = imageService.uploadImage(file, userEmail);
             return ResponseEntity.status(HttpStatus.CREATED).body(uploadedImage);
          } catch (IllegalStateException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());

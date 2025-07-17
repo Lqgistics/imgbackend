@@ -18,17 +18,19 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImageService {
 
     private final ImageRepository imageRepository;
+    private final UserRepository userRepository;
     private final Path uploadDIR = Paths.get("./uploads/");
 
-    public ImageService(ImageRepository imageRepository) throws IOException {
+    public ImageService(ImageRepository imageRepository, UserRepository userRepository) throws IOException {
         this.imageRepository = imageRepository;
+        this.userRepository = userRepository;
 
         if (!Files.exists(uploadDIR)) {
             Files.createDirectory(uploadDIR);
         }
     }
 
-    public Image uploadImage(MultipartFile file) throws IOException {
+    public Image uploadImage(MultipartFile file, String userEmail) throws IOException {
 
         Path filePath = this.uploadDIR.resolve(file.getOriginalFilename());
 
@@ -42,6 +44,9 @@ public class ImageService {
             throw new IllegalStateException("A file with the name '" + file.getOriginalFilename() + "' already exists.");        
         }
 
+        // Find the user who is uploading the image
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found: " + userEmail));
 
         try (InputStream inputStream = file.getInputStream()) {
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
@@ -55,6 +60,7 @@ public class ImageService {
         metadata.setFilePath(filePath.toString());
         metadata.setFileSize((file.getSize()) / 1000);
         metadata.setUploadDate(LocalDateTime.now());
+        metadata.setUser(user); // Associate the image with the user
 
         String viewURL = "api/images/view/" + file.getOriginalFilename();
         metadata.setViewURL(viewURL);
