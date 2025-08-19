@@ -2,9 +2,9 @@
 
 ## About The Project
 
-This project is a secure and scalable backend service for handling image uploads and management. It is designed to be easily integrated with various frontend applications that require image storage capabilities. The primary goal is to provide a robust, containerized, and easy-to-deploy solution for developers, abstracting away the complexities of file storage and user authentication.
+I built this project to create a secure and scalable backend for handling image uploads. The goal was to develop a self-contained service that could be easily integrated with any of my frontend applications needing image storage. This project handles the complexities of file storage and user authentication as well as the users usage analytics displayed on a dashboard. 
 
-(back to top)
+
 
 ### Built With
 
@@ -17,7 +17,7 @@ This section lists the major frameworks and libraries used to bootstrap the proj
 * [Spring Security](https://spring.io/projects/spring-security)
 * [JWT (JSON Web Token)](https://jwt.io/)
 
-(back to top)
+
 
 ## Getting Started
 
@@ -56,7 +56,7 @@ Ensure you have the following software installed on your local machine.
     docker-compose up --build
     ```
 
-(back to top)
+
 
 ## Usage
 
@@ -83,11 +83,12 @@ Once the application is running, you can interact with the API endpoints. The se
 
 For more detailed examples, please refer to the source code in the `src/main/java/com/aman/zen/` directory.
 
-(back to top)
+
 
 ## Roadmap
 
 - Implement user roles and permissions for more granular access control.
 - Add support for different image storage providers (e.g., AWS S3, Google Cloud Storage).
 
-(back to top)
+
+
